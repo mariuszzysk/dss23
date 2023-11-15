@@ -1,0 +1,39 @@
+options:
+  logging: CLOUD_LOGGING_ONLY
+
+steps:
+- name: 'gcr.io/cloud-builders/gcloud'
+  id: 'trigger_dag'
+  entrypoint: 'bash'
+  args:
+  - '-c'
+  - |
+    executiondate=$(date +"%Y-%m-%d %H:%M:%S")
+    run_id='CloudTrigger_'$(date +"%Y-%m-%dT%H:%M:%S.%N")
+    echo $executiondate
+    echo $run_id
+    # Set the start time
+    start_time=$(date +%s)
+    gcloud composer environments run ${_COMPOSER_ENVIRONMENT_NAME} --location=${_COMPOSER_LOCATION} dags trigger -- ${_DAG_ID} --run-id="${run_id}" --exec-date="${executiondate}"
+    # Loop for a maximum of 30 minutes
+    while [ $(($(date +%s) - $start_time)) -lt 1800 ]; do
+        # Check the DAG state
+        value=$(gcloud composer environments run ${_COMPOSER_ENVIRONMENT_NAME} --location=${_COMPOSER_LOCATION} dags state -- ${_DAG_ID} "${executiondate}")
+        echo "Curent DAG state: $value"
+        if [ "$value" == "success" ]; then
+            echo "Dag finish run with sucess."
+            exit 0
+        elif [ "$value" == "running" ]; then
+            echo "Waiting for DAG to finish run..."
+            sleep 60
+        elif [ "$value" == "queued" ]; then
+            echo "Waiting for DAG to start..."
+            sleep 60
+        elif [ "$value" == "failed" ]; then
+            echo "DAG finish with failure, check Airflow for details"
+            exit 1
+        else
+            echo "Unknown DAG state: $value. Exiting with failure."
+            exit 1
+        fi
+    done

@@ -1,0 +1,19 @@
+config {
+    name : "create_schema_dss_demo",
+    type : "operations",
+    schema : "dss_demo",
+    description : "creation script of schema dss_demo"
+    tags : ["init"]
+}
+
+/*
+Created by: Mariusz Zyśk / Laurens Coster
+Created: 2023-11-15
+Modifiy by: -
+Last modified: -
+
+Modification changelog:
+WHEN | WHO - WHAT WAS CHANGED
+*/
+
+CREATE SCHEMA IF NOT EXISTS dss_demo;
