@@ -2,7 +2,7 @@ config {
     name : "create_dss_demo_dss_table",
     type : "operations",
     schema : "dss_demo",
-    description: "creation script of table dss_table"
+    description: "creation script of table dss_table",
     dependencies : ["create_schema_dss_demo"],
     tags : ["init"]
 }
@@ -25,10 +25,10 @@ SpeakerBIO STRING OPTIONS(description='BIO Prelegenta'),
 PrelectionDate STRING OPTIONS(description='Data prelekcji na DSS'),
 PrelecionSubject STRING OPTIONS(description='Tytuł prelekcji'),
 PrelectionTime TIMESTAMP OPTIONS(description='Czas wygłoszenia / udostępnienia prelekcji')
-)
+);
 
 /*
 ALTER TABLE `${dataform.projectConfig.defaultDatabase}`.dss_demo.dss_table
 ADD COLUMN IF NOT EXISTS PrelectionRating NUMERIC OPTIONS(description='Średnia ocena prelekcji'),
 DROP COLUMN IF EXISTS SpeakerBIO;
-(/)
+*/

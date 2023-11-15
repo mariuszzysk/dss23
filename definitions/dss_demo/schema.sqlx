@@ -2,7 +2,7 @@ config {
     name : "create_schema_dss_demo",
     type : "operations",
     schema : "dss_demo",
-    description : "creation script of schema dss_demo"
+    description : "creation script of schema dss_demo",
     tags : ["init"]
 }
 
